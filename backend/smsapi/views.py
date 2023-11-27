@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from smsapi.models import User
-from smsapi.serializers import UserSerializer
+from smsapi.serializers import UserSerializer, StudentSerializer, TeacherSerializer
 from django.shortcuts import get_object_or_404
 
 @api_view(['GET'])
@@ -32,4 +32,50 @@ def adminLogin(request):
     serializer = UserSerializer(instance=user)
     return Response({"user": serializer.data})
 
+@api_view(['POST'])
+def teacherRegister(request):
 
+    serializer = TeacherSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        user = User.objects.get(username=request.data['username'])
+        user.set_password(request.data['password'])
+        user.save()
+        return Response({"user": serializer.data})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def teacherLogin(request):
+
+    serializer = TeacherSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        user = User.objects.get(username=request.data['username'])
+        user.set_password(request.data['password'])
+        user.save()
+        return Response({"user": serializer.data})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+@api_view(['POST'])
+def studentRegister(request):
+
+    serializer = StudentSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        user = User.objects.get(username=request.data['username'])
+        user.set_password(request.data['password'])
+        user.save()
+        return Response({"user": serializer.data})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def studentLogin(request):
+
+    serializer = StudentSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        user = User.objects.get(username=request.data['username'])
+        user.set_password(request.data['password'])
+        user.save()
+        return Response({"user": serializer.data})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

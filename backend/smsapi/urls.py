@@ -3,6 +3,10 @@ from smsapi import views
 
 urlpatterns = [
     path('helloworld/', views.hello_world, name='helloworld'),
-    path('adminsignup/', views.adminSignup, name='signup'),
-    path('adminlogin/', views.adminLogin, name='login')
+    path('adminsignup/', views.adminSignup, name='adminsignup'),
+    path('adminlogin/', views.adminLogin, name='adminlogin'),
+    path('studentsignup/', views.studentRegister, name='studentsignup'),
+    path('studentlogin/', views.studentLogin, name='studentlogin'),
+    path('teachersignup/', views.teacherRegister, name='teachersignup'),
+    path('teacherlogin/', views.teacherLogin, name='teacherlogin')
 ]
