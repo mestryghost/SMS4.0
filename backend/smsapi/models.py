@@ -1,6 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils import timezone
+from smsapi.managers import CustomUserManager
 
 rolesChoices = [
     ('Admin', 'SuperAdmin'),
@@ -16,40 +17,62 @@ class User(AbstractUser):
     name = models.CharField(max_length=255, null=True)
     email = models.EmailField(unique=True, null=True)
     role = models.CharField(max_length=255, choices=rolesChoices, default='BaseAdmin')
+    groups = models.ManyToManyField(Group, related_name='admins')
+    user_permissions = models.ManyToManyField(Permission, related_name='admin_users')
+
+    objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
 
-class Teacher(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
-    teachername = models.CharField(max_length=255, null=True)
+class Teacher(AbstractUser):
+    name = models.CharField(max_length=255, null=True)
+    email = models.EmailField(unique=True, null=True)
+    role = models.CharField(max_length=255, choices=rolesChoices, default='Teacher')
+    teacherfullname = models.CharField(max_length=255, null=True)
     teachermobile = models.PositiveIntegerField(null=True, editable=True)
     entrysalary = models.PositiveIntegerField(null=True, default=0)
     salarypaid = models.PositiveIntegerField(null=True, editable=True)
+    groups = models.ManyToManyField(Group, related_name='teachers')
+    user_permissions = models.ManyToManyField(Permission, related_name='teacher_users')
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
 
-    def __str__(self) -> str:
-        return self.user.id
+    def __str__(self):
+        return str(self.user.id)
 
     @property
     def salarybalance(self):
         balance = self.entrysalary - self.salarypaid
-        return balance
+        return float(balance)
 
 
-class Student(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
-    studentname = models.CharField(max_length=255, null=True)
+class Student(AbstractUser):
+    name = models.CharField(max_length=255, null=True)
+    email = models.EmailField(unique=True, null=True)
+    role = models.CharField(max_length=255, choices=rolesChoices, default='Student')
+    studentfullname = models.CharField(max_length=255, null=True)
     studentmobile = models.PositiveIntegerField(null=True, editable=True)
     entryfee = models.PositiveIntegerField(null=True, default=0)
     feepaid = models.PositiveIntegerField(null=True, editable=True)
+    groups = models.ManyToManyField(Group, related_name='students')
+    user_permissions = models.ManyToManyField(Permission, related_name='student_users')
 
-    def __str__(self) -> str:
-        return self.user.id
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    def __str__(self):
+        return str(self.user.id)
     
     @property
     def feebalance(self):
-        balance = self.entryfee - self.feepaid
-        return balance
+        balance = float(self.entryfee) - float(self.feepaid)
+        return float(balance)
     

@@ -3,26 +3,36 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from smsapi.models import User
+from rest_framework import generics
+from smsapi.models import User, Teacher, Student
 from smsapi.serializers import UserSerializer, StudentSerializer, TeacherSerializer
 from django.shortcuts import get_object_or_404
 
+# Function Based Views
+
+# Simple Hello World API
 @api_view(['GET'])
 def hello_world(request):
     return Response({'message': 'Hello, world!'})
 
+# Admin SignUp API View
 @api_view(['POST', 'GET'])
 def adminSignup(request):
     
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        user = User.objects.get(username=request.data['username'])
+        try:
+            user = User.objects.get(username=request.data['username'])
+        except User.DoesNotExist:
+            # Handle the case where the user does not exist
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         user.set_password(request.data['password'])
         user.save()
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Admin Login API View
 @api_view(['POST'])
 def adminLogin(request):
 
@@ -32,19 +42,24 @@ def adminLogin(request):
     serializer = UserSerializer(instance=user)
     return Response({"user": serializer.data})
 
-
-@api_view(['POST'])
+# Teacher SignUp API View
+@api_view(['POST', 'GET'])
 def teacherRegister(request):
 
     serializer = TeacherSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        user = User.objects.get(username=request.data['username'])
+        try:
+            user = User.objects.get(username=request.data['username'])
+        except User.DoesNotExist:
+            # Handle the case where the user does not exist
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         user.set_password(request.data['password'])
         user.save()
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Teacher Login API View
 @api_view(['POST'])
 def teacherLogin(request):
 
@@ -57,18 +72,24 @@ def teacherLogin(request):
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
-@api_view(['POST'])
+# Student SignUp API View
+@api_view(['POST', 'GET'])
 def studentRegister(request):
 
     serializer = StudentSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        user = User.objects.get(username=request.data['username'])
+        try:
+            user = User.objects.get(username=request.data['username'])
+        except User.DoesNotExist:
+            # Handle the case where the user does not exist
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         user.set_password(request.data['password'])
         user.save()
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Student Login API View
 @api_view(['POST'])
 def studentLogin(request):
 
@@ -80,3 +101,21 @@ def studentLogin(request):
         user.save()
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# Class Based Views
+
+# Admin ID Lookup
+class adminDetailAPIView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+adminDetailView = adminDetailAPIView.as_view()
+
+# Student ID Lookup
+class studentDetailAPIView(generics.RetrieveAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+studentDetailView = studentDetailAPIView.as_view()
