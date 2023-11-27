@@ -32,6 +32,7 @@ def adminLogin(request):
     serializer = UserSerializer(instance=user)
     return Response({"user": serializer.data})
 
+
 @api_view(['POST'])
 def teacherRegister(request):
 
