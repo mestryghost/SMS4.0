@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404
 # Simple Hello World API
 @api_view(['GET'])
 def hello_world(request):
-    return Response({'message': 'Hello, world!'})
+    return Response({'message': 'Hello, World!'})
 
 # Admin SignUp API View
 @api_view(['POST', 'GET'])
@@ -53,14 +53,11 @@ def teacherRegister(request):
 @api_view(['POST'])
 def teacherLogin(request):
 
-    serializer = TeacherSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        user = User.objects.get(username=request.data['username'])
-        user.set_password(request.data['password'])
-        user.save()
-        return Response({"user": serializer.data})
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+    user = get_object_or_404(Teacher, username=request.data['username'])
+    if not user.check_password(request.data['password']):
+        return Response({"Detail": "User Not Found"}, status=status.HTTP_404_NOT_FOUND)
+    serializer = TeacherSerializer(instance=user)
+    return Response({"user": serializer.data})
 
 # Student SignUp API View
 @api_view(['POST', 'GET'])
@@ -78,14 +75,11 @@ def studentRegister(request):
 @api_view(['POST'])
 def studentLogin(request):
 
-    serializer = StudentSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        user = User.objects.get(username=request.data['username'])
-        user.set_password(request.data['password'])
-        user.save()
-        return Response({"user": serializer.data})
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    user = get_object_or_404(Student, username=request.data['username'])
+    if not user.check_password(request.data['password']):
+        return Response({"Detail": "User Not Found"}, status=status.HTTP_404_NOT_FOUND)
+    serializer = StudentSerializer(instance=user)
+    return Response({"user": serializer.data})
 
 # Grouping
 #studentGroup = Group.objects.get_or_create("STUDENT")
@@ -106,3 +100,10 @@ class studentDetailAPIView(generics.RetrieveAPIView):
     serializer_class = StudentSerializer
 
 studentDetailView = studentDetailAPIView.as_view()
+
+# Teacher ID Lookup
+class teacherDetailAPIView(generics.RetrieveAPIView):
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
+
+teacherDetailView = teacherDetailAPIView.as_view()
