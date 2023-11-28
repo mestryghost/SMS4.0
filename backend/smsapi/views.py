@@ -104,3 +104,10 @@ class studentDetailAPIView(generics.RetrieveAPIView):
     serializer_class = StudentSerializer
 
 studentDetailView = studentDetailAPIView.as_view()
+
+# Teacher ID Lookup
+class teacherDetailAPIView(generics.RetrieveAPIView):
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
+
+teacherDetailView = teacherDetailAPIView.as_view()
