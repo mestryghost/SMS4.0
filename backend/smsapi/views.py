@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render
+from django.contrib.auth.models import Group, Permission
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -24,6 +25,15 @@ def adminSignup(request):
         user_instance = serializer.save()
         user_instance.set_password(request.data['password'])
         user_instance.save()
+
+        # Add Admin to Admin Group
+        admin_group, _ = Group.objects.get_or_create(name="admins")
+        user_instance.groups.add(admin_group)
+
+        # Add Admin to Admin Permissions
+        permissions = Permission.objects.filter(name__icontains="admin_users")
+        user_instance.user_permissions.add(*permissions)
+
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -46,6 +56,15 @@ def teacherRegister(request):
         user_instance = serializer.save()
         user_instance.set_password(request.data['password'])
         user_instance.save()
+
+        # Add Teacher to Teacher Group
+        teacher_group, _ = Group.objects.get_or_create(name="teachers")
+        user_instance.groups.add(teacher_group)
+
+        # Add Teacher to Teacher Permissions
+        permissions = Permission.objects.filter(name__icontains="teacher_users")
+        user_instance.user_permissions.add(*permissions)
+
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -68,6 +87,15 @@ def studentRegister(request):
         user_instance = serializer.save()
         user_instance.set_password(request.data['password'])
         user_instance.save()
+
+        # Add Teacher to Student Group
+        student_group, _ = Group.objects.get_or_create(name="students")
+        user_instance.groups.add(student_group)
+
+        # Add Teacher to Student Permissions
+        permissions = Permission.objects.filter(name__icontains="student_users")
+        user_instance.user_permissions.add(*permissions)
+
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -81,9 +109,6 @@ def studentLogin(request):
     serializer = StudentSerializer(instance=user)
     return Response({"user": serializer.data})
 
-# Grouping
-#studentGroup = Group.objects.get_or_create("STUDENT")
-#studentGroup[0].user_set.add(primeUser)
 
 # Class Based Views
 
