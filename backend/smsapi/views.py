@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404
 # Simple Hello World API
 @api_view(['GET'])
 def hello_world(request):
-    return Response({'message': 'Hello, World!'})
+    return Response({'message': 'Hello World!'})
 
 # Admin SignUp API View
 @api_view(['POST', 'GET'])
