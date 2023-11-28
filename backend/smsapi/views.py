@@ -53,14 +53,11 @@ def teacherRegister(request):
 @api_view(['POST'])
 def teacherLogin(request):
 
-    serializer = TeacherSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        user = User.objects.get(username=request.data['username'])
-        user.set_password(request.data['password'])
-        user.save()
-        return Response({"user": serializer.data})
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+    user = get_object_or_404(Teacher, username=request.data['username'])
+    if not user.check_password(request.data['password']):
+        return Response({"Detail": "User Not Found"}, status=status.HTTP_404_NOT_FOUND)
+    serializer = UserSerializer(instance=user)
+    return Response({"user": serializer.data})
 
 # Student SignUp API View
 @api_view(['POST', 'GET'])
@@ -78,14 +75,11 @@ def studentRegister(request):
 @api_view(['POST'])
 def studentLogin(request):
 
-    serializer = StudentSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        user = User.objects.get(username=request.data['username'])
-        user.set_password(request.data['password'])
-        user.save()
-        return Response({"user": serializer.data})
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    user = get_object_or_404(Student, username=request.data['username'])
+    if not user.check_password(request.data['password']):
+        return Response({"Detail": "User Not Found"}, status=status.HTTP_404_NOT_FOUND)
+    serializer = UserSerializer(instance=user)
+    return Response({"user": serializer.data})
 
 
 
