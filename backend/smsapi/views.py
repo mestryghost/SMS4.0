@@ -81,7 +81,9 @@ def studentLogin(request):
     serializer = StudentSerializer(instance=user)
     return Response({"user": serializer.data})
 
-
+# Grouping
+#studentGroup = Group.objects.get_or_create("STUDENT")
+#studentGroup[0].user_set.add(primeUser)
 
 # Class Based Views
 
