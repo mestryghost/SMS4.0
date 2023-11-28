@@ -87,7 +87,9 @@ def studentLogin(request):
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+# Grouping
+#studentGroup = Group.objects.get_or_create("STUDENT")
+#studentGroup[0].user_set.add(primeUser)
 
 # Class Based Views
 
