@@ -21,14 +21,9 @@ def adminSignup(request):
     
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        try:
-            user = User.objects.get(username=request.data['username'])
-        except User.DoesNotExist:
-            # Handle the case where the user does not exist
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        user.set_password(request.data['password'])
-        user.save()
+        user_instance = serializer.save()
+        user_instance.set_password(request.data['password'])
+        user_instance.save()
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -48,14 +43,9 @@ def teacherRegister(request):
 
     serializer = TeacherSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        try:
-            user = User.objects.get(username=request.data['username'])
-        except User.DoesNotExist:
-            # Handle the case where the user does not exist
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        user.set_password(request.data['password'])
-        user.save()
+        user_instance = serializer.save()
+        user_instance.set_password(request.data['password'])
+        user_instance.save()
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -78,14 +68,9 @@ def studentRegister(request):
 
     serializer = StudentSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        try:
-            user = User.objects.get(username=request.data['username'])
-        except User.DoesNotExist:
-            # Handle the case where the user does not exist
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        user.set_password(request.data['password'])
-        user.save()
+        user_instance = serializer.save()
+        user_instance.set_password(request.data['password'])
+        user_instance.save()
         return Response({"user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
