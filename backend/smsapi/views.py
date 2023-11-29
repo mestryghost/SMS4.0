@@ -10,7 +10,8 @@ from smsapi.serializers import UserSerializer, StudentSerializer, TeacherSeriali
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import logout, login, authenticate
 from django.core.exceptions import ObjectDoesNotExist
-
+import pyotp
+import time
 
 # Function Based Views
 
@@ -32,7 +33,17 @@ def adminSignup(request):
         user_instance.save()
 
         # Token Generated during SignUp
-        token, created = Token.objects.get_or_create(user=user_instance)
+        # token, created = Token.objects.get_or_create(user=user_instance)
+        totp = pyotp.TOTP('base32secret3232')
+        totp.now() # => '492039'
+        
+
+        # OTP verified for current time
+        totp.verify('492039') # => True
+        time.sleep(30)
+        totp.verify('492039') # => False
+        pyotp.random_hex()
+
 
         # Add Admin to Admin Group
         admin_group, _ = Group.objects.get_or_create(name="admins")
@@ -74,6 +85,17 @@ def teacherRegister(request):
 
         # Token Generated during SignUp
         # token, created = Token.objects.get_or_create(user=user_instance)
+        totp = pyotp.TOTP('base32secret3232')
+        totp.now() # => '492039'
+        
+
+        # OTP verified for current time
+        totp.verify('492039') # => True
+        time.sleep(30)
+        totp.verify('492039') # => False
+        pyotp.random_hex()
+
+
 
         # Add Teacher to Teacher Group
         teacher_group, _ = Group.objects.get_or_create(name="teachers")
@@ -115,6 +137,17 @@ def studentRegister(request):
 
         # Token Generated during SignUp
         # token, created = Token.objects.get_or_create(user=user_instance)
+        totp = pyotp.TOTP('base32secret3232')
+        totp.now() # => '492039'
+        
+
+        # OTP verified for current time
+        totp.verify('492039') # => True
+        time.sleep(30)
+        totp.verify('492039') # => False
+        pyotp.random_hex()
+
+
 
         # Add Teacher to Student Group
         student_group, _ = Group.objects.get_or_create(name="students")
