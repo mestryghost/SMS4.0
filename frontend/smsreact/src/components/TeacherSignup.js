@@ -1,12 +1,14 @@
-// TeacherSignup.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
 const TeacherSignup = () => {
   const [formData, setFormData] = useState({
-    teachername: '',
-    teachermobile: '',
-    entrysalary: '',
+    firstname: '',
+    lastname: '',
+    email: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
   });
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -14,10 +16,17 @@ const TeacherSignup = () => {
     e.preventDefault();
 
     try {
-      // Make API request to store teacher data in the database
-      const response = await axios.post('http://127.0.0.1:8000/api/teachersignup/', formData);
+      const response = await axios.post('http://127.0.0.1:8000/api/teachersignup/', {
+        // Make API request to store student data in the database
+      
+        first_name: formData.firstname, // Match the field names here
+        last_name: formData.lastname,   // Match the field names here
+        email: formData.email,
+        username: formData.username,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+    });
 
-      // Display success message
       setSuccessMessage('Successfully signed up teacher');
       console.log('Teacher Signup success:', response.data);
     } catch (error) {
@@ -33,42 +42,77 @@ const TeacherSignup = () => {
   };
 
   return (
-    <div>
-      <h1>Teacher Signup</h1>
-      <form onSubmit={handleFormSubmit}>
-        <div>
-          <label htmlFor="teachername">Teacher Name</label>
-          <input
-            type="text"
-            id="teachername"
-            name="teachername"
-            value={formData.teachername}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="teachermobile">Teacher Mobile</label>
-          <input
-            type="text"
-            id="teachermobile"
-            name="teachermobile"
-            value={formData.teachermobile}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="entrysalary">Entry Salary</label>
-          <input
-            type="text"
-            id="entrysalary"
-            name="entrysalary"
-            value={formData.entrysalary}
-            onChange={handleInputChange}
-          />
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-      {successMessage && <div>{successMessage}</div>}
+    <div className="flex justify-center items-center h-screen">
+      <div className="w-96 p-8 bg-white rounded-md shadow-md">
+        <h1 className="text-2xl font-bold mb-4">Teacher's Signup</h1>
+        <form onSubmit={handleFormSubmit}>
+          <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+            <input
+              className="pl-2 outline-none border-none flex-1"
+              type="text"
+              name="firstname"
+              placeholder="First Name"
+              value={formData.firstname}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+            <input
+              className="pl-2 outline-none border-none flex-1"
+              type="text"
+              name="lastname"
+              placeholder="Last Name"
+              value={formData.lastname}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+            <input
+              className="pl-2 outline-none border-none flex-1"
+              type="text"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+            <input
+              className="pl-2 outline-none border-none flex-1"
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+            <input
+              className="pl-2 outline-none border-none flex-1"
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+            <input
+              className="pl-2 outline-none border-none flex-1"
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+            />
+          </div>
+          <br></br>
+          <button type="submit" className="block w-full bg-blue-500 text-white py-2 rounded-2xl">
+            Submit
+          </button>
+        </form>
+        {successMessage && <div className="mt-4 text-green-500">{successMessage}</div>}
+      </div>
     </div>
   );
 };

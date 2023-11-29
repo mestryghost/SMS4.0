@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import AdminLogin from './components/AdminLogin';
 import SignupDashboard from './components/SignupDashboard';
 import StudentSignup from './components/StudentSignup';
+import TeacherSignup from './components/TeacherSignup';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={isLoggedIn ? <Navigate to="/signup-dashboard" /> : <AdminLogin onLogin={handleLogin} />} />
         <Route path="/signup-dashboard" element={isLoggedIn ? <SignupDashboard /> : <Navigate to="/" />} />
         <Route path="/signup-dashboard/StudentSignup" element={<StudentSignup />} />
+        <Route path="/signup-dashboard/TeacherSignup" element={<TeacherSignup />} />
       </Routes>
     </Router>
   );

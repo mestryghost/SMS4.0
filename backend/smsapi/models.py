@@ -43,9 +43,6 @@ class Teacher(AbstractUser):
     REQUIRED_FIELDS = ['username']
 
 
-    def __str__(self):
-        return str(self.user.id)
-
     @property
     def salarybalance(self):
         balance = self.entrysalary - self.salarypaid
@@ -68,8 +65,6 @@ class Student(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    def __str__(self):
-        return str(self.user.id)
     
     @property
     def feebalance(self):

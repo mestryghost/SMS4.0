@@ -39,7 +39,7 @@ const SignupDashboard = () => {
 
       <div className="mx-4">
         <div
-          className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700"
+          className="block rounded-lg bg-white shadow-[0_4px_20px_-5px_rgba(0,0,0,0.1),0_10px_25px_-5px_rgba(0,0,0,0.1)] dark:bg-neutral-700"
           onClick={handleTeacherSignupClick}
         >
           <img

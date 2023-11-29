@@ -62,7 +62,7 @@ const StudentSignup = () => {
               type="text"
               name="lastname"
               placeholder="Last Name"
-              value={formData.last_name}
+              value={formData.lastname}
               onChange={handleInputChange}
             />
           </div>

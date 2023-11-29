@@ -73,7 +73,7 @@ def teacherRegister(request):
         user_instance.save()
 
         # Token Generated during SignUp
-        token, created = Token.objects.get_or_create(user=user_instance)
+        # token, created = Token.objects.get_or_create(user=user_instance)
 
         # Add Teacher to Teacher Group
         teacher_group, _ = Group.objects.get_or_create(name="teachers")
@@ -83,7 +83,7 @@ def teacherRegister(request):
         permissions = Permission.objects.filter(name__icontains="teacher_users")
         user_instance.user_permissions.add(*permissions)
 
-        return Response({"message" : "Success, TeacherUser Registered!", "token" : token.key, "user": serializer.data})
+        return Response({"message" : "Success, TeacherUser Registered!", "user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Teacher Login API View
@@ -94,11 +94,11 @@ def teacherLogin(request):
     user = get_object_or_404(Teacher, username=request.data['username'])
     if not user.check_password(request.data['password']):
         return Response({"Detail": "User Not Found"}, status=status.HTTP_404_NOT_FOUND)
-    token, created = Token.objects.get_or_create(user=user)
+    # token, created = Token.objects.get_or_create(user=user)
     serializer = TeacherSerializer(instance=user)
     if user:
         if user.is_active:
-            return Response({"message" : "Success, TeacherUser Logged In!", "token" : token.key, "user": serializer.data})
+            return Response({"message" : "Success, TeacherUser Logged In!", "user": serializer.data})
         return Response({"message" : f"{str(user.username)} is not Active"})
     return Response(serializer.errors, status=status.HTTP_408_REQUEST_TIMEOUT)
 
@@ -114,7 +114,7 @@ def studentRegister(request):
         user_instance.save()
 
         # Token Generated during SignUp
-        token, created = Token.objects.get_or_create(user=user_instance)
+        # token, created = Token.objects.get_or_create(user=user_instance)
 
         # Add Teacher to Student Group
         student_group, _ = Group.objects.get_or_create(name="students")
@@ -124,7 +124,7 @@ def studentRegister(request):
         permissions = Permission.objects.filter(name__icontains="student_users")
         user_instance.user_permissions.add(*permissions)
 
-        return Response({"message" : "Success, StudentUser Registered!", "token" : token.key, "user": serializer.data})
+        return Response({"message" : "Success, StudentUser Registered!", "user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Student Login API View
@@ -135,11 +135,11 @@ def studentLogin(request):
     user = get_object_or_404(Student, username=request.data['username'])
     if not user.check_password(request.data['password']):
         return Response({"Detail": "User Not Found"}, status=status.HTTP_404_NOT_FOUND)
-    token, created = Token.objects.get_or_create(user=user)
+    # token, created = Token.objects.get_or_create(user=user)
     serializer = StudentSerializer(instance=user)
     if user:
         if user.is_active:
-            return Response({"message" : "Success, StudentUser Logged In!", "token" : token.key, "user": serializer.data})
+            return Response({"message" : "Success, StudentUser Logged In!", "user": serializer.data})
         return Response({"message" : f"{str(user.username)} is not Active"})
     return Response(serializer.errors, status=status.HTTP_408_REQUEST_TIMEOUT)
 
