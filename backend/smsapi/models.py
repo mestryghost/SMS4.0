@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import AbstractUser, Group, Permission, PermissionsMixin
 from django.utils import timezone
 from smsapi.managers import CustomUserManager
 
@@ -47,6 +47,10 @@ class Teacher(AbstractUser):
     def salarybalance(self):
         balance = self.entrysalary - self.salarypaid
         return float(balance)
+    
+    @property
+    def tokens(self):
+        pass
 
 
 class Student(AbstractUser):
@@ -71,3 +75,6 @@ class Student(AbstractUser):
         balance = float(self.entryfee) - float(self.feepaid)
         return float(balance)
     
+    @property
+    def tokens(self):
+        pass
