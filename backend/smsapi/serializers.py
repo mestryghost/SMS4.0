@@ -23,7 +23,7 @@ class SubjectSerializer(serializers.ModelSerializer):
 
 class TermSerializer(serializers.ModelSerializer):
     class Meta(object):
-        models = Term
+        model = Term
         fields = '__all__'
 
     def create(self, validated_data):
