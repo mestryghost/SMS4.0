@@ -11,6 +11,12 @@ rolesChoices = [
     ('Teacher', 'Teacher')
 ]
 
+termChoices = [
+    ('1', 'Term1'),
+    ('2', 'Term2'),
+    ('3', 'Term3')
+]
+
 # Create your models here.
 
 class User(AbstractUser):
@@ -78,3 +84,57 @@ class Student(AbstractUser):
     @property
     def tokens(self):
         pass
+
+class Subject(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+    
+class Term(models.Model):
+    name = models.CharField(max_length=1, choices=termChoices, default=1)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    def __str__(self):
+        return self.name
+    
+class Test(models.Model):
+    term = models.ForeignKey(Term, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, blank=False, null=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self) -> str:
+        return self.name
+    
+class studentScore(models.Model):
+    student = models.ForeignKey(Student, related_name="studentscore", on_delete=models.CASCADE)
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
+
+    def __str__(self) -> str:
+        return f"{self.student.username} - {self.test.name}"
+    
+    class Meta:
+        unique_together = ['student', 'test']
+
+class studentPerformance(models.Model):
+    gradeChoices = [
+        ('NA', 'Not Graded'),
+        ('A', 'Excellent'),
+        ('B', 'Very Good'),
+        ('C', 'Good'),
+        ('D', 'Fair'),
+        ('E', 'Fail'),
+        ('F', 'Very Poor')
+    ]
+
+    student = models.ForeignKey(Student, related_name="studentperformance", on_delete=models.CASCADE)
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    grade = models.CharField(max_length=2, choices=gradeChoices, default='NA')
+
+    def __str__(self) -> str:
+        return f"{self.student} - {self.grade}"
+    
+    class Meta:
+        unique_together = ['student', 'grade']
