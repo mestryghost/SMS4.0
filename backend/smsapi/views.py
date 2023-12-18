@@ -221,3 +221,5 @@ class TermCreateView(generics.CreateAPIView):
             for test_number in range(1, 3):
                 test_name = f"{subject.name} {chr(ord('A') + test_number - 1)}"
                 Test.objects.create(term=term, subject=subject, name=test_name)
+
+termCreateView = TermCreateView.as_view()

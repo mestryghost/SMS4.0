@@ -11,5 +11,7 @@ urlpatterns = [
     path('teacherlogin/', views.teacherLogin, name='teacherlogin'),
     path('logout/', views.UserLogout, name='logout'),
     path('admindetail/<int:pk>/', views.adminDetailView, name='admindetail'),
-    path('studentdetail/<int:pk>/', views.studentDetailView, name='studentdetail')
+    path('studentdetail/<int:pk>/', views.studentDetailView, name='studentdetail'),
+    path('subjectcreate/', views.subjectCreateView, name='subjectcreate'),
+    path('termcreate/', views.termCreateView, name='termcreate')
 ]
