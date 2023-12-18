@@ -21,6 +21,11 @@ class SubjectSerializer(serializers.ModelSerializer):
         model = Subject
         fields = '__all__'
 
+class StudentPerformanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = studentPerformance
+        fields = '__all__'
+
 class TermSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = Term

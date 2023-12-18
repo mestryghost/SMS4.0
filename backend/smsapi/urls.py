@@ -13,5 +13,6 @@ urlpatterns = [
     path('admindetail/<int:pk>/', views.adminDetailView, name='admindetail'),
     path('studentdetail/<int:pk>/', views.studentDetailView, name='studentdetail'),
     path('subjectcreate/', views.subjectCreateView, name='subjectcreate'),
-    path('termcreate/', views.termCreateView, name='termcreate')
+    path('termcreate/', views.termCreateView, name='termcreate'),
+    path('studentperformance/', views.studentPerformanceView, name='studentperformance')
 ]

@@ -5,8 +5,8 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
-from smsapi.models import User, Teacher, Student, Subject, Term, Test
-from smsapi.serializers import UserSerializer, StudentSerializer, TeacherSerializer, SubjectSerializer, TermSerializer
+from smsapi.models import User, Teacher, Student, Subject, Term, Test, studentPerformance, studentScore
+from smsapi.serializers import UserSerializer, StudentSerializer, TeacherSerializer, SubjectSerializer, TermSerializer, StudentPerformanceSerializer
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import logout, login, authenticate
 from django.core.exceptions import ObjectDoesNotExist
@@ -223,3 +223,36 @@ class TermCreateView(generics.CreateAPIView):
                 Test.objects.create(term=term, subject=subject, name=test_name)
 
 termCreateView = TermCreateView.as_view()
+
+class StudentPerformanceView(generics.CreateAPIView):
+    queryset = studentPerformance.objects.all()
+    serializer_class = StudentPerformanceSerializer
+    permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        # Create a mutable copy of request.data
+        mutable_data = request.data.copy()
+
+        # Logic to assign grades based on the score
+        score = mutable_data.get('score', 0)
+        if score < 10:
+            mutable_data['grade'] = 'F'
+        elif score < 20:
+            mutable_data['grade'] = 'E'
+        elif score < 40:
+            mutable_data['grade'] = 'D'
+        elif score < 60:
+            mutable_data['grade'] = 'C'
+        elif score < 80:
+            mutable_data['grade'] = 'B'
+        else:
+            mutable_data['grade'] = 'A'
+
+        # Use the mutable copy for further processing
+        serializer = self.get_serializer(data=mutable_data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=201)
+
+studentPerformanceView = StudentPerformanceView.as_view()
