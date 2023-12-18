@@ -104,7 +104,7 @@ class Test(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, blank=False, null=True)
     name = models.CharField(max_length=255)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.name
     
 class studentScore(models.Model):
@@ -112,8 +112,8 @@ class studentScore(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
 
-    def __str__(self) -> str:
-        return f"{self.student.username} - {self.test.name}"
+    def __str__(self):
+        return self.score
     
     class Meta:
         unique_together = ['student', 'test']
@@ -133,8 +133,8 @@ class studentPerformance(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     grade = models.CharField(max_length=2, choices=gradeChoices, default='NA')
 
-    def __str__(self) -> str:
-        return f"{self.student} - {self.grade}"
+    def __str__(self):
+        return self.grade
     
     class Meta:
         unique_together = ['student', 'grade']
