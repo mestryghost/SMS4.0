@@ -48,6 +48,9 @@ class Teacher(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+    def __str__(self):
+        return self.username
+
 
     @property
     def salarybalance(self):
@@ -74,6 +77,9 @@ class Student(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+
+    def __str__(self):
+        return self.username
 
     
     @property
@@ -113,7 +119,7 @@ class studentScore(models.Model):
     score = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.score
+        return str(self.score)
     
     class Meta:
         unique_together = ['student', 'test']
