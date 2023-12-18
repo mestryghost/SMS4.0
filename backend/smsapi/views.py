@@ -5,8 +5,8 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
-from smsapi.models import User, Teacher, Student
-from smsapi.serializers import UserSerializer, StudentSerializer, TeacherSerializer
+from smsapi.models import User, Teacher, Student, Subject, Term, Test
+from smsapi.serializers import UserSerializer, StudentSerializer, TeacherSerializer, SubjectSerializer, TermSerializer
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import logout, login, authenticate
 from django.core.exceptions import ObjectDoesNotExist
@@ -181,3 +181,43 @@ class teacherDetailAPIView(generics.RetrieveAPIView):
     serializer_class = TeacherSerializer
 
 teacherDetailView = teacherDetailAPIView.as_view()
+
+class SubjectCreateView(generics.CreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        term = serializer.save()
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=201, headers=headers)
+    
+subjectCreateView = SubjectCreateView.as_view()
+
+class TermCreateView(generics.CreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = Term.objects.all()
+    serializer_class = TermSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        term = serializer.save()
+
+        # Generaing tests for created terms
+        self.generate_tests_for_term(term)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=201, headers=headers)
+
+    def generate_tests_for_term(self, term):
+        # Assuming a list of subjects is in place
+        subjects = Subject.objects.all()
+
+        for subject in subjects:
+            for test_number in range(1, 3):
+                test_name = f"{subject.name} {chr(ord('A') + test_number - 1)}"
+                Test.objects.create(term=term, subject=subject, name=test_name)
